@@ -37,6 +37,7 @@ public class DurianItemController : ControllerBase
         return ItemToDTO(DurianItem);
     }
     
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutDurianItem(int id, DurianItemDTO durianItem)
     {
@@ -68,6 +69,7 @@ public class DurianItemController : ControllerBase
         return NoContent();
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> AddDurian(AddDurian addDurian)
     {
@@ -85,6 +87,7 @@ public class DurianItemController : ControllerBase
         return Ok(DurianItem);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDurianItem(int id)
     {

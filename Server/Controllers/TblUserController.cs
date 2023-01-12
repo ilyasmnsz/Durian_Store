@@ -12,6 +12,7 @@ using User.Models;
 
 namespace Durian.Controllers;
 
+
 [ApiController]
 [Route("api/[controller]")]
 public class TblUserController : ControllerBase
@@ -25,7 +26,7 @@ public class TblUserController : ControllerBase
         this.jwtSettings = options.Value;
     }
 
-    [HttpPost("Authenticate")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Authenticate([FromBody]UserAuth userAuth)
     {
         var user = await this.DbContext.TblUsers.FirstOrDefaultAsync(item=>item.Username==userAuth.Username && item.Password==userAuth.Password);
@@ -37,7 +38,7 @@ public class TblUserController : ControllerBase
         var tokendesc = new SecurityTokenDescriptor{Subject = new ClaimsIdentity(
             new Claim[] {new Claim(ClaimTypes.Name, user.Username)}
         ),
-        Expires=DateTime.Now.AddSeconds(8000),
+        Expires=DateTime.Now.AddDays(7),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenkey), SecurityAlgorithms.HmacSha256)
         };
         var token = tokenhandler.CreateToken(tokendesc);
@@ -46,7 +47,7 @@ public class TblUserController : ControllerBase
         return Ok(finaltoken);
     }
 
-
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> UserCred(UserCred userCred)
     {
@@ -65,12 +66,14 @@ public class TblUserController : ControllerBase
         return Ok(UserCred);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult> GetTblUsers()
     {
         return Ok(await DbContext.TblUsers.ToListAsync());
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<TblUserDTO>> GetTblUsers(int id)
     {
@@ -84,6 +87,7 @@ public class TblUserController : ControllerBase
         return Ok(TblUser);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutTblUsers(int id, TblUserDTO tblUserDTO)
     {
@@ -116,6 +120,7 @@ public class TblUserController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTblUsers(int id)
     {
