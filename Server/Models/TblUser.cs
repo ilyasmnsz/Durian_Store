@@ -9,4 +9,5 @@ public class TblUserDTO
     public string? Password { get; set; }
     public string? Email { get; set; }
     public string? Telepon { get; set; } 
+    public string? Tipe { get; set; }
 }

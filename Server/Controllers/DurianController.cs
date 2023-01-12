@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Durian.Controllers;
 
+[Authorize(Roles = "admin,user")]
 [ApiController]
 [Route("api/[controller]")]
 public class DurianItemController : ControllerBase
@@ -37,7 +38,7 @@ public class DurianItemController : ControllerBase
         return ItemToDTO(DurianItem);
     }
     
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutDurianItem(int id, DurianItemDTO durianItem)
     {
@@ -69,7 +70,7 @@ public class DurianItemController : ControllerBase
         return NoContent();
     }
     
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<ActionResult> AddDurian(AddDurian addDurian)
     {
@@ -87,7 +88,7 @@ public class DurianItemController : ControllerBase
         return Ok(DurianItem);
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDurianItem(int id)
     {

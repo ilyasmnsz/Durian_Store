@@ -12,7 +12,6 @@ using User.Models;
 
 namespace Durian.Controllers;
 
-
 [ApiController]
 [Route("api/[controller]")]
 public class TblUserController : ControllerBase
@@ -36,7 +35,7 @@ public class TblUserController : ControllerBase
         var tokenhandler = new JwtSecurityTokenHandler();
         var tokenkey = Encoding.UTF8.GetBytes(this.jwtSettings.securitykey);
         var tokendesc = new SecurityTokenDescriptor{Subject = new ClaimsIdentity(
-            new Claim[] {new Claim(ClaimTypes.Name, user.Username)}
+            new Claim[] {new Claim(ClaimTypes.Name, user.Username), new Claim(ClaimTypes.Role, user.Tipe)}
         ),
         Expires=DateTime.Now.AddDays(7),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenkey), SecurityAlgorithms.HmacSha256)
@@ -47,7 +46,7 @@ public class TblUserController : ControllerBase
         return Ok(finaltoken);
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<ActionResult> UserCred(UserCred userCred)
     {
@@ -57,7 +56,8 @@ public class TblUserController : ControllerBase
             Username = userCred.Username,
             Email = userCred.Email,
             Password = userCred.Password,
-            Telepon = userCred.Telepon
+            Telepon = userCred.Telepon,
+            Tipe = userCred.Tipe
         };
         
         await DbContext.TblUsers.AddAsync(UserCred);
@@ -66,14 +66,14 @@ public class TblUserController : ControllerBase
         return Ok(UserCred);
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public async Task<ActionResult> GetTblUsers()
     {
         return Ok(await DbContext.TblUsers.ToListAsync());
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpGet("{id}")]
     public async Task<ActionResult<TblUserDTO>> GetTblUsers(int id)
     {
@@ -87,7 +87,7 @@ public class TblUserController : ControllerBase
         return Ok(TblUser);
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutTblUsers(int id, TblUserDTO tblUserDTO)
     {
@@ -107,6 +107,7 @@ public class TblUserController : ControllerBase
         TblUsers.Email = tblUserDTO.Email;
         TblUsers.Password = tblUserDTO.Password;
         TblUsers.Telepon = tblUserDTO.Telepon;
+        TblUsers.Tipe = tblUserDTO.Tipe;
 
         try
         {
@@ -120,7 +121,7 @@ public class TblUserController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTblUsers(int id)
     {
@@ -149,6 +150,7 @@ public class TblUserController : ControllerBase
         Username = tblUser.Username,
         Password = tblUser.Password,
         Email = tblUser.Email,
-        Telepon = tblUser.Telepon
+        Telepon = tblUser.Telepon,
+        Tipe = tblUser.Tipe
        };
 }
