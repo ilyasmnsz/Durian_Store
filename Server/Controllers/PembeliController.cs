@@ -2,6 +2,7 @@
 // using Microsoft.EntityFrameworkCore;
 // using Durian.Models;
 // using Durian.Data;
+// using User.Models;
 
 // namespace Durian.Controllers;
 
@@ -17,45 +18,47 @@
 //         this.DbContext = DbContext;
 //     }
 
-//     //GET: api/Pembeli
 //     [HttpGet]
 //     public async Task<ActionResult> GetPembelis()
 //     {
-//         return Ok(await DbContext.Pembelis.ToListAsync());
+//         return Ok(await DbContext.TblUsers.ToListAsync());
 //     }
 
 //     //Get : api/Pembeli
 //     [HttpGet("{id}")]
-//     public async Task<ActionResult<PembeliDTO>> GetPmbeli(int id)
+//     public async Task<ActionResult<TblUserDTO>> GetPembeli(int id)
 //     {
-//         var Pembeli = await DbContext.Pembelis.FindAsync(id);
+//         var Pembeli = await DbContext.TblUsers.FindAsync(id);
 
 //         if (Pembeli == null)
 //         {
 //             return NotFound();
 //         }
         
-//         return ItemToDTO(Pembeli);
+//         return Ok(Pembeli);
 //     }
 
 //     //PUT : api/Pembeli
 //     [HttpPut("{id}")]
-//     public async Task<ActionResult> PutPembeli(int id, PembeliDTO pembeliDTO)
+//     public async Task<ActionResult> PutPembeli(int id, TblUserDTO tblUserDTO)
 //     {
-//         if (id != pembeliDTO.Id)
+//         if (id != tblUserDTO.Id)
 //         {
 //             return BadRequest();
 //         }
 
-//         var Pembeli = await DbContext.Pembelis.FindAsync(id);
+//         var Pembeli = await DbContext.TblUsers.FindAsync(id);
 //         if (Pembeli == null)
 //         {
 //             return NotFound();
 //         }
 
-//         Pembeli.Nama = pembeliDTO.Nama;
-//         Pembeli.Email = pembeliDTO.Email;
-//         Pembeli.Telepon = pembeliDTO.Telepon;
+//         Pembeli.Nama = tblUserDTO.Nama;
+//         Pembeli.Username = tblUserDTO.Username;
+//         Pembeli.Email = tblUserDTO.Email;
+//         Pembeli.Password = tblUserDTO.Password;
+//         Pembeli.Telepon = tblUserDTO.Telepon;
+
 
 //         try
 //         {
@@ -68,52 +71,55 @@
 
 //         return NoContent();
 //     }
-//         //POST : api/Pembeli
-//         [HttpPost]
-//         public async Task<ActionResult>AddPembeli(AddPembeli addPembeli)
+//     //POST : api/Pembeli
+//     [HttpPost]
+//     public async Task<ActionResult>AddPembeli(PembeliDTO pembeliDTO)
+//     {
+//        var Pembeli = new TblUserDTO()
 //         {
-//             var Pembeli = new PembeliDTO()
-//             {
-//                 Nama = addPembeli.Nama,
-//                 Email = addPembeli.Email,
-//                 Telepon = addPembeli.Telepon
-//             };
+//             Nama = pembeliDTO.Nama,
+//             Username = pembeliDTO.Username,
+//             Email = pembeliDTO.Email,
+//             Password = pembeliDTO.Password,
+//             Telepon = pembeliDTO.Telepon
+//         };
 
-//             await DbContext.Pembelis.AddAsync(Pembeli);
-//             await DbContext.SaveChangesAsync();
+//         await DbContext.TblUsers.AddAsync(Pembeli);
+//         await DbContext.SaveChangesAsync();
 
-//             return Ok(Pembeli);
+//         return Ok(Pembeli);
+//     }
+
+//     //DELETE: api/Pembeli
+//     [HttpDelete("{id}")]
+//     public async Task<IActionResult> DeletePembeli(int id)
+//     {
+//         var Pembeli = await DbContext.TblUsers.FindAsync(id);
+//         if (Pembeli == null)
+//         {
+//             return NotFound();
 //         }
 
-//         //DELETE: api/Pembeli
-//         [HttpDelete("{id}")]
-//         public async Task<IActionResult> DeletePembeli(int id)
+//         DbContext.TblUsers.Remove(Pembeli);
+//         await DbContext.SaveChangesAsync();
+
+//         return NoContent();
+//     }
+
+//     private bool PembeliExists(int id)
+//     {
+//         return DbContext.TblUsers.Any(e => e.Id == id);
+//     }
+
+//     private static TblUserDTO ItemToDTO(TblUserDTO pembeli) =>
+//         new TblUserDTO
 //         {
-//             var Pembeli = await DbContext.Pembelis.FindAsync(id);
-//             if (Pembeli == null)
-//             {
-//                 return NotFound();
-//             }
-
-//             DbContext.Pembelis.Remove(Pembeli);
-//             await DbContext.SaveChangesAsync();
-
-//             return NoContent();
-
-//         }
-
-//             private bool PembeliExists(int id)
-//             {
-//                 return DbContext.Pembelis.Any(e => e.Id == id);
-//             }
-
-//             private static PembeliDTO ItemToDTO(PembeliDTO pembeli) =>
-//                 new PembeliDTO
-//                 {
-//                     Id = pembeli.Id,
-//                     Nama = pembeli.Nama,
-//                     Email = pembeli.Email,
-//                     Telepon = pembeli.Telepon
-//                 };
+//             Id = pembeli.Id,
+//             Nama = pembeli.Nama,
+//             Username = pembeli.Username,
+//             Password = pembeli.Password,
+//             Email = pembeli.Email,
+//             Telepon = pembeli.Telepon
+//         };
 // }
 

@@ -2,6 +2,7 @@
 // using Microsoft.EntityFrameworkCore;
 // using Durian.Models;
 // using Durian.Data;
+// using User.Models;
 
 // namespace Durian.Controllers;
 
@@ -16,50 +17,44 @@
 //         this.DbContext = DbContext;
 //     }
 
-//     // GET: api/Penjual
 //     [HttpGet]
 //     public async Task<ActionResult> GetPenjuals()
 //     {
-//         return Ok(await DbContext.Penjuals.ToListAsync());
+//         return Ok(await DbContext.TblUsers.ToListAsync());
 //     }
 
-//     // GET: api/TPenjual
-//     // <snippet_GetByID>
 //     [HttpGet("{id}")]
-//     public async Task<ActionResult<PenjualDTO>> GetPenjual(int id)
+//     public async Task<ActionResult<TblUserDTO>> GetPenjual(int id)
 //     {
-//         var Penjual = await DbContext.Penjuals.FindAsync(id);
+//         var Penjual = await DbContext.TblUsers.FindAsync(id);
 
 //         if (Penjual == null)
 //         {
 //             return NotFound();
 //         }
 
-//         return ItemToDTO(Penjual);
+//         return Ok(Penjual);
 //     }
-//     // </snippet_GetByID>
 
-//     // PUT: api/Penjual
-//     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-//     // <snippet_Update>
 //     [HttpPut("{id}")]
-//     public async Task<IActionResult> PutPenjual(int id, PenjualDTO penjualDTO)
+//     public async Task<IActionResult> PutPenjual(int id, TblUserDTO tblUserDTO)
 //     {
-//         if (id != penjualDTO.Id)
+//         if (id != tblUserDTO.Id)
 //         {
 //             return BadRequest();
 //         }
 
-//         var Penjual = await DbContext.Penjuals.FindAsync(id);
+//         var Penjual = await DbContext.TblUsers.FindAsync(id);
 //         if (Penjual == null)
 //         {
 //             return NotFound();
 //         }
 
-//         Penjual.Nama = penjualDTO.Nama;
-//         Penjual.Sosmed = penjualDTO.Sosmed;
-//         Penjual.Telepon = penjualDTO.Telepon;
-//         Penjual.Alamat = penjualDTO.Alamat;
+//         Penjual.Nama = tblUserDTO.Nama;
+//         Penjual.Username = tblUserDTO.Username;
+//         Penjual.Email = tblUserDTO.Email;
+//         Penjual.Password = tblUserDTO.Password;
+//         Penjual.Telepon = tblUserDTO.Telepon;
 
 //         try
 //         {
@@ -72,40 +67,35 @@
 
 //         return NoContent();
 //     }
-//     // </snippet_Update>
-
-//     // POST: api/Penjual
-//     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-//     // <snippet_Create>
+ 
 //     [HttpPost]
-//     public async Task<ActionResult> AddPenjual(AddPenjual addPenjual)
+//     public async Task<ActionResult> AddPenjual(PenjualDTO penjualDTO)
 //     {
-//         var Penjual = new PenjualDTO()
+//         var Penjual = new TblUserDTO()
 //         {
-//             Nama = addPenjual.Nama,
-//             Sosmed = addPenjual.Sosmed,
-//             Telepon = addPenjual.Telepon,
-//             Alamat = addPenjual.Alamat
+//             Nama = penjualDTO.Nama,
+//             Username = penjualDTO.Username,
+//             Email = penjualDTO.Email,
+//             Password = penjualDTO.Password,
+//             Telepon = penjualDTO.Telepon
 //         };
         
-//         await DbContext.Penjuals.AddAsync(Penjual);
+//         await DbContext.TblUsers.AddAsync(Penjual);
 //         await DbContext.SaveChangesAsync();
 
 //         return Ok(Penjual);
 //     }
-//     // </snippet_Create>
 
-//     // DELETE: api/Penjual
 //     [HttpDelete("{id}")]
 //     public async Task<IActionResult> DeletePenjual(int id)
 //     {
-//         var Penjual = await DbContext.Penjuals.FindAsync(id);
+//         var Penjual = await DbContext.TblUsers.FindAsync(id);
 //         if (Penjual == null)
 //         {
 //             return NotFound();
 //         }
 
-//         DbContext.Penjuals.Remove(Penjual);
+//         DbContext.TblUsers.Remove(Penjual);
 //         await DbContext.SaveChangesAsync();
 
 //         return NoContent();
@@ -113,18 +103,17 @@
 
 //     private bool PenjualExists(int id)
 //     {
-//         return DbContext.Penjuals.Any(e => e.Id == id);
+//         return DbContext.TblUsers.Any(e => e.Id == id);
 //     }
 
-//     private static PenjualDTO ItemToDTO(PenjualDTO penjual) =>
-//        new PenjualDTO
+//     private static TblUserDTO ItemToDTO(TblUserDTO penjual) =>
+//        new TblUserDTO
 //        {
 //            Id = penjual.Id,
 //            Nama = penjual.Nama,
-//            Sosmed = penjual.Sosmed,
-//            Telepon = penjual.Telepon,
-//            Alamat = penjual.Alamat
-
-
+//            Username = penjual.Username,
+//            Password = penjual.Password,
+//            Email = penjual.Email,
+//            Telepon = penjual.Telepon
 //        };
 // }
