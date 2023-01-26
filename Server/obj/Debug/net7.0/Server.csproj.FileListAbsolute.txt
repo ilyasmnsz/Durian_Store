@@ -107,3 +107,4 @@
 /Users/ilyasmansiz/Documents/GitHub/DURIANStore/Server/bin/Debug/net7.0/runtimes/win-x86/native/sni.dll
 /Users/ilyasmansiz/Documents/GitHub/DURIANStore/Server/bin/Debug/net7.0/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll
 /Users/ilyasmansiz/Documents/GitHub/DURIANStore/Server/bin/Debug/net7.0/runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll
+/Users/ilyasmansiz/Documents/GitHub/DURIANStore/Server/bin/Debug/net7.0/Newtonsoft.Json.dll

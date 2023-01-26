@@ -2,8 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;  
-using Durians.Handler;
-using Microsoft.IdentityModel.Tokens;
+using Durian.Handler;
 using System.IdentityModel.Tokens.Jwt;
 using Durian.Models;
 using Durian.Data;
@@ -17,10 +16,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();  
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -73,6 +86,15 @@ builder.Services.AddAuthentication(item =>
     };
 });
 
+// public void ConfigureServices(IServiceCollection services)
+// {
+//     services.AddSession();
+//     services.AddScoped<IProductService, ProductService>();
+// }
+
+// builder.Services.AddSession();
+// builder.Services.AddScoped<IProductService, ProductService>();
+
 builder.Services.AddDbContext<DurianContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
 // builder.Services.AddScoped<IRefereshTokenGenerator, RefereshTokenGenerator>();
@@ -81,11 +103,15 @@ builder.Services.AddDbContext<DurianContext>(opt => opt.UseNpgsql(builder.Config
 // IMapper mapper=automapper.CreateMapper();
 // builder.Services.AddSingleton(mapper);
 
+// builder.Services.AddHttpsRedirection(options =>{
+//     options.HttpsPort = 5198;
+// });
 
 var _jwtsettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(_jwtsettings);
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -94,8 +120,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+ 
+            app.UseHttpsRedirection();
+// app.UseSession();
+// app.UseMvc();
 
+app.UseCors();
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 

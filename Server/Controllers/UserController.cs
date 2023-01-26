@@ -14,21 +14,21 @@ namespace Durian.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TblUserController : ControllerBase
+public class UserController : ControllerBase
 {
     private readonly DurianContext DbContext;
     private readonly JwtSettings jwtSettings;
 
-    public TblUserController(DurianContext _DbContext,IOptions<JwtSettings> options)
+    public UserController(DurianContext _DbContext,IOptions<JwtSettings> options)
     {
         this.DbContext = _DbContext;
         this.jwtSettings = options.Value;
     }
 
-    [HttpPost("Login")]
+    [HttpPost("Masuk")]
     public async Task<IActionResult> Authenticate([FromBody]UserAuth userAuth)
     {
-        var user = await this.DbContext.TblUsers.FirstOrDefaultAsync(item=>item.Username==userAuth.Username && item.Password==userAuth.Password);
+        var user = await this.DbContext.Users.FirstOrDefaultAsync(item=>item.Username==userAuth.Username && item.Password==userAuth.Password);
         if(user==null)
             return Unauthorized();
         ////Generate Token
@@ -43,14 +43,14 @@ public class TblUserController : ControllerBase
         var token = tokenhandler.CreateToken(tokendesc);
         string finaltoken = tokenhandler.WriteToken(token);
 
-        return Ok(finaltoken);
+        return Ok(new {finaltoken, user.Tipe});
     }
 
-    [Authorize(Roles = "admin")]
-    [HttpPost]
+    // [Authorize(Roles = "admin")]
+    [HttpPost("Daftar")]
     public async Task<ActionResult> UserCred(UserCred userCred)
     {
-        var UserCred = new TblUserDTO()
+        var UserCred = new UserDTO()
         {
             Nama = userCred.Nama,
             Username = userCred.Username,
@@ -60,24 +60,24 @@ public class TblUserController : ControllerBase
             Tipe = userCred.Tipe
         };
         
-        await DbContext.TblUsers.AddAsync(UserCred);
+        await DbContext.Users.AddAsync(UserCred);
         await DbContext.SaveChangesAsync();
 
         return Ok(UserCred);
     }
 
-    [Authorize(Roles = "admin")]
-    [HttpGet]
-    public async Task<ActionResult> GetTblUsers()
+    // [Authorize(Roles = "admin,user")]
+    [HttpGet("List")]
+    public async Task<ActionResult> GetUsers()
     {
-        return Ok(await DbContext.TblUsers.ToListAsync());
+        return Ok(await DbContext.Users.ToListAsync());
     }
 
-    [Authorize(Roles = "admin")]
+    // [Authorize(Roles = "admin,user")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<TblUserDTO>> GetTblUsers(int id)
+    public async Task<ActionResult<UserDTO>> GetUsers(int id)
     {
-        var TblUser = await DbContext.TblUsers.FindAsync(id);
+        var TblUser = await DbContext.Users.FindAsync(id);
 
         if (TblUser == null)
         {
@@ -87,33 +87,33 @@ public class TblUserController : ControllerBase
         return Ok(TblUser);
     }
 
-    [Authorize(Roles = "admin")]
+    // [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutTblUsers(int id, TblUserDTO tblUserDTO)
+    public async Task<IActionResult> PutUsers(int id, UserDTO UserDTO)
     {
-        if (id != tblUserDTO.Id)
+        if (id != UserDTO.Id)
         {
             return BadRequest();
         }
 
-        var TblUsers = await DbContext.TblUsers.FindAsync(id);
+        var TblUsers = await DbContext.Users.FindAsync(id);
         if (TblUsers == null)
         {
             return NotFound();
         }
 
-        TblUsers.Nama = tblUserDTO.Nama;
-        TblUsers.Username = tblUserDTO.Username;
-        TblUsers.Email = tblUserDTO.Email;
-        TblUsers.Password = tblUserDTO.Password;
-        TblUsers.Telepon = tblUserDTO.Telepon;
-        TblUsers.Tipe = tblUserDTO.Tipe;
+        TblUsers.Nama = UserDTO.Nama;
+        TblUsers.Username = UserDTO.Username;
+        TblUsers.Email = UserDTO.Email;
+        TblUsers.Password = UserDTO.Password;
+        TblUsers.Telepon = UserDTO.Telepon;
+        TblUsers.Tipe = UserDTO.Tipe;
 
         try
         {
             await DbContext.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException) when (!TblUsersExists(id))
+        catch (DbUpdateConcurrencyException) when (!UsersExists(id))
         {
             return NotFound();
         }
@@ -121,36 +121,36 @@ public class TblUserController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "admin")]
+    // [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTblUsers(int id)
+    public async Task<IActionResult> DeleteUsers(int id)
     {
-        var TblUser = await DbContext.TblUsers.FindAsync(id);
+        var TblUser = await DbContext.Users.FindAsync(id);
         if (TblUser == null)
         {
             return NotFound();
         }
 
-        DbContext.TblUsers.Remove(TblUser);
+        DbContext.Users.Remove(TblUser);
         await DbContext.SaveChangesAsync();
 
         return NoContent();
     }
 
-    private bool TblUsersExists(int id)
+    private bool UsersExists(int id)
     {
-        return DbContext.TblUsers.Any(e => e.Id == id);
+        return DbContext.Users.Any(e => e.Id == id);
     }
 
-    private static TblUserDTO ItemToDTO(TblUserDTO tblUser) =>
-       new TblUserDTO
+    private static UserDTO ItemToDTO(UserDTO User) =>
+       new UserDTO
        {
-        Id = tblUser.Id,
-        Nama = tblUser.Nama,
-        Username = tblUser.Username,
-        Password = tblUser.Password,
-        Email = tblUser.Email,
-        Telepon = tblUser.Telepon,
-        Tipe = tblUser.Tipe
+        Id = User.Id,
+        Nama = User.Nama,
+        Username = User.Username,
+        Password = User.Password,
+        Email = User.Email,
+        Telepon = User.Telepon,
+        Tipe = User.Tipe
        };
 }

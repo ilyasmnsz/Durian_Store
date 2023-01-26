@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "nht4Wwn8Uj/HNox+5V5Ige6lyWj79+W98r49q1DUFLAEiwCV4IInA42kLNdR0KM2vkvjfq9EJojdnYrQTVe1dQ==",
+  "dgSpecHash": "Z1FK2+w58lZkpN4vJpwqz8UA3XLqhebvb4n3lPGk5mdN4sPnoUL9zSIC/zji96aFjs48Yk9FqRJQKgtG3kHMIw==",
   "success": true,
   "projectFilePath": "/Users/ilyasmansiz/Documents/GitHub/DURIANStore/Server/Server.csproj",
   "expectedPackageFiles": [
@@ -46,6 +46,7 @@
     "/Users/ilyasmansiz/.nuget/packages/microsoft.win32.registry/4.7.0/microsoft.win32.registry.4.7.0.nupkg.sha512",
     "/Users/ilyasmansiz/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/ilyasmansiz/.nuget/packages/netstandard.library/1.6.1/netstandard.library.1.6.1.nupkg.sha512",
+    "/Users/ilyasmansiz/.nuget/packages/newtonsoft.json/13.0.2/newtonsoft.json.13.0.2.nupkg.sha512",
     "/Users/ilyasmansiz/.nuget/packages/npgsql/7.0.1/npgsql.7.0.1.nupkg.sha512",
     "/Users/ilyasmansiz/.nuget/packages/npgsql.entityframeworkcore.postgresql/7.0.1/npgsql.entityframeworkcore.postgresql.7.0.1.nupkg.sha512",
     "/Users/ilyasmansiz/.nuget/packages/npgsql.entityframeworkcore.postgresql.design/1.1.0/npgsql.entityframeworkcore.postgresql.design.1.1.0.nupkg.sha512",

@@ -19,40 +19,72 @@ namespace Server.Migrations
                 .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseSerialColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Durian.Models.DurianItemDTO", b =>
+            modelBuilder.Entity("Belanja.Models.KeranjangDTO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Harga")
-                        .HasColumnType("text");
+                    b.Property<int>("DurianDTO_Id")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Keadaan")
-                        .HasColumnType("text");
+                    b.Property<int>("Jumlahdurian")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Nama")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Stok")
+                    b.Property<int>("UserDTO_Id")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DurianItems");
+                    b.HasIndex("DurianDTO_Id");
+
+                    b.HasIndex("UserDTO_Id");
+
+                    b.ToTable("Keranjangs");
                 });
 
-            modelBuilder.Entity("User.Models.TblUserDTO", b =>
+            modelBuilder.Entity("Durian.Models.DurianDTO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Gambardurian")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Hargadurian")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Keadaandurian")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Namadurian")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Stokdurian")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Tentangdurian")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Durians");
+                });
+
+            modelBuilder.Entity("User.Models.UserDTO", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -74,7 +106,38 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TblUsers");
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Belanja.Models.KeranjangDTO", b =>
+                {
+                    b.HasOne("Durian.Models.DurianDTO", "DurianDTO")
+                        .WithMany("KeranjangDTOs")
+                        .HasForeignKey("DurianDTO_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Keranjang_Durian");
+
+                    b.HasOne("User.Models.UserDTO", "UserDTO")
+                        .WithMany("KeranjangDTOs")
+                        .HasForeignKey("UserDTO_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Keranjang_User");
+
+                    b.Navigation("DurianDTO");
+
+                    b.Navigation("UserDTO");
+                });
+
+            modelBuilder.Entity("Durian.Models.DurianDTO", b =>
+                {
+                    b.Navigation("KeranjangDTOs");
+                });
+
+            modelBuilder.Entity("User.Models.UserDTO", b =>
+                {
+                    b.Navigation("KeranjangDTOs");
                 });
 #pragma warning restore 612, 618
         }

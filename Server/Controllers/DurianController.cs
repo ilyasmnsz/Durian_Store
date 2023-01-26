@@ -9,26 +9,27 @@ namespace Durian.Controllers;
 [Authorize(Roles = "admin,user")]
 [ApiController]
 [Route("api/[controller]")]
-public class DurianItemController : ControllerBase
+public class DurianController : ControllerBase
 {
     private readonly DurianContext DbContext;
 
-    public DurianItemController(DurianContext DbContext)
+    public DurianController(DurianContext DbContext)
     {
         this.DbContext = DbContext;
     }
 
 
-    [HttpGet]
-    public async Task<ActionResult> GetDurianItems()
+    [HttpGet("durian")]
+    public async Task<ActionResult> GetDurians()
     {
-        return Ok(await DbContext.DurianItems.ToListAsync());
+        return Ok(await DbContext.Durians.ToListAsync());
     }
 
+    [Authorize(Roles = "admin, user")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<DurianItemDTO>> GetDurianItem(int id)
+    public async Task<ActionResult<DurianDTO>> GetDurian(int id)
     {
-        var DurianItem = await DbContext.DurianItems.FindAsync(id);
+        var DurianItem = await DbContext.Durians.FindAsync(id);
 
         if (DurianItem == null)
         {
@@ -40,23 +41,25 @@ public class DurianItemController : ControllerBase
     
     [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutDurianItem(int id, DurianItemDTO durianItem)
+    public async Task<IActionResult> PutDurian(int id, DurianDTO durian)
     {
-        if (id != durianItem.Id)
+        if (id != durian.Id)
         {
             return BadRequest();
         }
 
-        var DurianItem = await DbContext.DurianItems.FindAsync(id);
+        var DurianItem = await DbContext.Durians.FindAsync(id);
         if (DurianItem == null)
         {
             return NotFound();
         }
 
-        DurianItem.Nama = durianItem.Nama;
-        DurianItem.Harga = durianItem.Harga;
-        DurianItem.Keadaan = durianItem.Keadaan;
-        DurianItem.Stok = durianItem.Stok;
+        DurianItem.Namadurian = durian.Namadurian;
+        DurianItem.Tentangdurian = durian.Tentangdurian;
+        DurianItem.Keadaandurian = durian.Keadaandurian;
+        DurianItem.Hargadurian = durian.Hargadurian;
+        DurianItem.Stokdurian = durian.Stokdurian;
+        DurianItem.Gambardurian = durian.Gambardurian;
 
         try
         {
@@ -74,15 +77,17 @@ public class DurianItemController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> AddDurian(AddDurian addDurian)
     {
-        var DurianItem = new DurianItemDTO()
+        var DurianItem = new DurianDTO()
         {
-            Nama = addDurian.Nama,
-            Harga = addDurian.Harga,
-            Keadaan = addDurian.Keadaan,
-            Stok = addDurian.Stok
+            Namadurian = addDurian.Nama,
+            Tentangdurian = addDurian.Tentang,
+            Keadaandurian = addDurian.Keadaan,
+            Hargadurian = addDurian.Harga,
+            Stokdurian = addDurian.Stok,
+            Gambardurian = addDurian.Gambar
         };
         
-        await DbContext.DurianItems.AddAsync(DurianItem);
+        await DbContext.Durians.AddAsync(DurianItem);
         await DbContext.SaveChangesAsync();
 
         return Ok(DurianItem);
@@ -90,15 +95,15 @@ public class DurianItemController : ControllerBase
 
     [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDurianItem(int id)
+    public async Task<IActionResult> DeleteDurian(int id)
     {
-        var DurianItem = await DbContext.DurianItems.FindAsync(id);
+        var DurianItem = await DbContext.Durians.FindAsync(id);
         if (DurianItem == null)
         {
             return NotFound();
         }
 
-        DbContext.DurianItems.Remove(DurianItem);
+        DbContext.Durians.Remove(DurianItem);
         await DbContext.SaveChangesAsync();
 
         return NoContent();
@@ -106,16 +111,18 @@ public class DurianItemController : ControllerBase
 
     private bool DurianItemExists(int id)
     {
-        return DbContext.DurianItems.Any(e => e.Id == id);
+        return DbContext.Durians.Any(e => e.Id == id);
     }
 
-    private static DurianItemDTO ItemToDTO(DurianItemDTO durianItem) =>
-       new DurianItemDTO
+    private static DurianDTO ItemToDTO(DurianDTO durianItem) =>
+       new DurianDTO
        {
            Id = durianItem.Id,
-           Nama = durianItem.Nama,
-           Harga = durianItem.Harga,
-           Keadaan = durianItem.Keadaan,
-           Stok = durianItem.Stok
+           Namadurian = durianItem.Namadurian,
+           Tentangdurian = durianItem.Tentangdurian,
+           Keadaandurian = durianItem.Keadaandurian,
+           Hargadurian = durianItem.Hargadurian,
+           Stokdurian = durianItem.Stokdurian,
+           Gambardurian = durianItem.Gambardurian
        };
 }

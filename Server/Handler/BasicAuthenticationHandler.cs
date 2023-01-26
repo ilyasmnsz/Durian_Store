@@ -8,7 +8,7 @@ using Durian.Models;
 using Durian.Data;
 using System.Security.Claims;
 
-namespace Durians.Handler 
+namespace Durian.Handler 
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
@@ -31,7 +31,7 @@ namespace Durians.Handler
                 string[] array = credentials.Split(':');
                 string username = array[0];
                 string password = array[1];
-                var user = this.durianContext.TblUsers.FirstOrDefault(item=>item.Username==username && item.Password==password);
+                var user = this.durianContext.Users.FirstOrDefault(item=>item.Username==username && item.Password==password);
                 if(user==null)
                     return AuthenticateResult.Fail("UnAuthorized");
 
